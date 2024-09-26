@@ -1,8 +1,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "hashmap.h"
-#include "inttypes.h"
+#include "hash_map.h"
+#include "int_types.h"
 #include "siphash.h"
 #include "test.h"
 

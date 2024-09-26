@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "inttypes.h"
+#include "int_types.h"
 
 #define PT_COUNTER_SIZE 16
 

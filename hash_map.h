@@ -1,7 +1,7 @@
 #ifndef HASHMAP_H
 #define HASHMAP_H
 
-#include "inttypes.h"
+#include "int_types.h"
 #include "test.h"
 
 typedef struct c_hash_map_entry {

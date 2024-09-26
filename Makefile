@@ -1,7 +1,7 @@
 CC = tcc
 CFLAGS = -Wall -std=89
-SRC = lsystem.c siphash.c hashmap.c
-PT_SRC = perftest.c test.c siphash.c hashmap.c
+SRC = lsystem.c siphash.c hash_map.c
+PT_SRC = perf_test.c test.c siphash.c hash_map.c
 
 lsystem: $(SRC)
 	$(CC) $(CFLAGS) -o lsystem $(SRC)
@@ -11,11 +11,11 @@ run:
 	./lsystem
 
 #test: lsystem.c
-#	$(CC) $(CFLAGS) -DTEST -o lsystem lsystem.c siphash.c hashmap.c
+#	$(CC) $(CFLAGS) -DTEST -o lsystem lsystem.c siphash.c hash_map.c
 
-perftest: $(PT_SRC)
-	$(CC) $(CFLAGS) -DPERFTEST -o perftest $(PT_SRC)
-	./perftest
+perf_test: $(PT_SRC)
+	$(CC) $(CFLAGS) -DPERFTEST -o perf_test $(PT_SRC)
+	./perf_test
 
 clean:
-	rm -f lsystem perftest
+	rm -f lsystem perf_test

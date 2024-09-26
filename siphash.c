@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "inttypes.h"
+#include "int_types.h"
 
 /* Default: SipHash-2-4 */
 #ifndef cROUNDS

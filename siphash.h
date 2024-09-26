@@ -1,4 +1,4 @@
-#include "inttypes.h"
+#include "int_types.h"
 
 /*
     Computes a SipHash value

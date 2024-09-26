@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "hashmap.h"
+#include "hash_map.h"
 
 int main() {
 	printf("Running L-System..\n");
