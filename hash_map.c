@@ -88,3 +88,21 @@ int hash_map_insert(PT_ENABLED CHashMap *map, char key, char val) {
     }
     return hash_map_insert_internal(PT_INPUT map, key, val);
 }
+
+void hash_map_print(CHashMap *map) {
+    int i;
+    printf("{\n");
+	for (i = 0; i < map->size; ++i) {
+        if (IS_OCCUPIED(map->occ_arr, i)) {
+            printf(
+                    "  [%d] %c: %c\n",
+                    i,
+                    map->entry_arr[i].key,
+                    map->entry_arr[i].val
+            );
+        } else {
+            printf("  [%d]\n", i);
+        }
+	}
+    printf("}\n");
+}

@@ -3,6 +3,12 @@
 
 #include "int_types.h"
 
+#ifndef TEST
+#endif
+
+#ifdef TEST
+#endif
+
 #define PT_COUNTER_SIZE 16
 
 #ifndef PERFTEST
