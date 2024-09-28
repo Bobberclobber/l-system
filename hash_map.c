@@ -16,10 +16,9 @@
      ((uint64)((p)[1]) << 48) |((uint64)((p)[0]) << 56))
 
 #define OCC_SIZE(s) 1 + ((s) - 1)/8
-#define IS_OCCUPIED(a, b) (a)[(b)/8] & 0x80 >> (b)%8
-#define SET_OCCUPIED(a, b) (a)[(b)/8] |= (0x80 >> (b)%8)
+#define IS_OCCUPIED(m, b) (m).occ_arr[(b)/8] & 0x80 >> (b)%8
+#define SET_OCCUPIED(m, b) (m).occ_arr[(b)/8] |= (0x80 >> (b)%8)
 #define OFFSET_BUCKET(b, o) ((b) + (o))%map->size
-
 
 void hash_map_create(CHashMap *map, uint32 init_size) {
     /* TODO: Assert against uint32 max. */
@@ -41,12 +40,12 @@ void hash_map_destroy(CHashMap *map) {
 
 int hash_map_insert_internal(PT_ENABLED CHashMap *map, char key, char val) {
     PT_COUNTER_INC(1, 1);
-    uint8 out[HASH_LEN];
-    siphash(&key, CHAR_BYTE_LEN, map->k, out, HASH_LEN);
-    uint32 bucket = U8TO64_BE(out) % map->size;
+    uint8 hash_out[HASH_LEN];
+    siphash(&key, CHAR_BYTE_LEN, map->k, hash_out, HASH_LEN);
+    uint32 bucket = U8TO64_BE(hash_out) % map->size;
     uint32 offset = 0;
     while (offset < map->size &&
-           IS_OCCUPIED(map->occ_arr, OFFSET_BUCKET(bucket, offset)) &&
+           IS_OCCUPIED(*map, OFFSET_BUCKET(bucket, offset)) &&
            map->entry_arr[OFFSET_BUCKET(bucket, offset)].key != key) {
         offset += 1;
     }
@@ -57,43 +56,58 @@ int hash_map_insert_internal(PT_ENABLED CHashMap *map, char key, char val) {
     }
     bucket = OFFSET_BUCKET(bucket, offset);
     map->entry_arr[bucket] = (CHashMapEntry) { .key = key, .val = val };
-    SET_OCCUPIED(map->occ_arr, bucket);
+    SET_OCCUPIED(*map, bucket);
     map->count += 1;
     return 0;
 }
 
 int hash_map_insert(PT_ENABLED CHashMap *map, char key, char val) {
+    /* Resize if the map is ~75% full. */
     if (map->count > (map->size - (map->size >> 2))) {
         PT_COUNTER_INC(0, 1);
-        uint32 old_size = map->size;
-        CHashMapEntry *old_entries = map->entry_arr;
-        uint8 *old_occ = map->occ_arr;
+        CHashMap old_map = *map;
         hash_map_create(map, map->size << 1);
         int i;
-        for (i = 0; i < old_size; ++i) {
-            if (IS_OCCUPIED(old_occ, i)) {
+        for (i = 0; i < old_map.size; ++i) {
+            if (IS_OCCUPIED(old_map, i)) {
                 int res = hash_map_insert_internal(
                         PT_INPUT
                         map,
-                        old_entries[i].key,
-                        old_entries[i].val
+                        old_map.entry_arr[i].key,
+                        old_map.entry_arr[i].val
                 );
                 if (res) {
                     return res;
                 }
             }
         }
-        free(old_entries);
-        free(old_occ);
+        hash_map_destroy(&old_map);
     }
     return hash_map_insert_internal(PT_INPUT map, key, val);
+}
+
+int hash_map_get(PT_ENABLED char *out, CHashMap *map, char key) {
+    uint8 hash_out[HASH_LEN];
+    siphash(&key, CHAR_BYTE_LEN, map->k, hash_out, HASH_LEN);
+    uint32 bucket = U8TO64_BE(hash_out) % map->size;
+    uint32 offset = 0;
+    while (offset < map->size &&
+           IS_OCCUPIED(*map, OFFSET_BUCKET(bucket, offset))) {
+        PT_COUNTER_INC(0, 1);
+        if (map->entry_arr[OFFSET_BUCKET(bucket, offset)].key == key) {
+            *out = map->entry_arr[OFFSET_BUCKET(bucket, offset)].val;
+            return 0;
+        }
+        offset += 1;
+    }
+    return 1;
 }
 
 void hash_map_print(CHashMap *map) {
     int i;
     printf("{\n");
 	for (i = 0; i < map->size; ++i) {
-        if (IS_OCCUPIED(map->occ_arr, i)) {
+        if (IS_OCCUPIED(*map, i)) {
             printf(
                     "  [%d] %c: %c\n",
                     i,
