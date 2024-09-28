@@ -13,7 +13,7 @@ typedef struct c_hash_map_test_data {
     uint32 expected_index;
 } CHashMapTestData;
 
-void hash_map_insert_success_test() {
+void hash_map_insert_test() {
     CHashMapTestData test_data[] = {
         { .key = 'a', .val = 'x', .expected_index = 11 },
         { .key = 'b', .val = 'y', .expected_index = 12 },
@@ -41,12 +41,39 @@ void hash_map_insert_success_test() {
                 test_data[i].val
         );
     }
+    assert(map.count == 5);
+    assert(map.size == 16);
+
+    hash_map_destroy(&map);
+}
+
+void hash_map_resize_test() {
+    CHashMap map;
+    hash_map_create(&map, 16);
+
+    int i;
+    for (i = 0; i < 256; ++i) {
+        assert(!hash_map_insert(&map, i, (i + 17)%256));
+    }
+
+    assert(map.count == 256);
+    assert(map.size == 512);
+
+    char out;
+    for (i = 0; i < 256; ++i) {
+        assert(!hash_map_get(&out, &map, i));
+        assert(out == (char)((i + 17)%256));
+    }
+
+    assert(map.count == 256);
+    assert(map.size == 512);
 
     hash_map_destroy(&map);
 }
 
 int main() {
-    hash_map_insert_success_test();
+    hash_map_insert_test();
+    hash_map_resize_test();
     printf("All tests passed!\n");
     return 0;
 }
