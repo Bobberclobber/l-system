@@ -57,8 +57,10 @@ int hash_map_insert_internal(PT_ENABLED CHashMap *map, char key, char val) {
     }
     bucket = OFFSET_BUCKET(bucket, offset);
     map->entry_arr[bucket] = (CHashMapEntry) { .key = key, .val = val };
-    SET_OCCUPIED(*map, bucket);
-    map->count += 1;
+    if (!IS_OCCUPIED(*map, bucket)) {
+        SET_OCCUPIED(*map, bucket);
+        map->count += 1;
+    }
     return 0;
 }
 
