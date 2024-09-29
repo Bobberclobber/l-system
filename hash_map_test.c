@@ -38,7 +38,7 @@ void c_hash_map_insert_test() {
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        hash_map_insert(&map, test_data[i].key, test_data[i].val);
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
@@ -73,7 +73,7 @@ void c_hash_map_insert_resize_test() {
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        hash_map_insert(&map, test_data[i].key, test_data[i].val);
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
@@ -83,6 +83,67 @@ void c_hash_map_insert_resize_test() {
     }
     assert(map.count == 5);
     assert(map.size == 8);
+    assert(count_occupied(&map) == map.count);
+
+    hash_map_destroy(&map);
+}
+
+void c_hash_map_insert_overwrite_test() {
+    CHashMapTestData test_data[] = {
+        { .key = 'a', .val = 'x', .expected_index = 11 },
+        { .key = 'b', .val = 'y', .expected_index = 12 },
+        { .key = 'c', .val = 'z', .expected_index = 0 },
+        { .key = 'd', .val = 'v', .expected_index = 5 },
+        { .key = 'e', .val = 'w', .expected_index = 14 },
+    };
+    CHashMapTestData unchanged_data[] = {
+        { .key = 'a', .val = 'x', .expected_index = 11 },
+        { .key = 'c', .val = 'z', .expected_index = 0 },
+    };
+    CHashMapTestData overwrite_data[] = {
+        { .key = 'b', .val = '1', .expected_index = 12 },
+        { .key = 'd', .val = '2', .expected_index = 5 },
+        { .key = 'e', .val = '3', .expected_index = 14 },
+    };
+
+    CHashMap map;
+    hash_map_create(&map, 16);
+
+    int i;
+    for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+    }
+    for (i = 0; i < TEST_DATA_LEN(overwrite_data); ++i) {
+        assert(!hash_map_insert(
+                    &map,
+                    overwrite_data[i].key,
+                    overwrite_data[i].val
+        ));
+    }
+
+    char out;
+    for (i = 0; i < TEST_DATA_LEN(unchanged_data); ++i) {
+        assert(!hash_map_get(&out, &map, unchanged_data[i].key));
+        assert(out == unchanged_data[i].val);
+        ASSERT_MAP_ARR_ENTRY_EQ(
+                map,
+                unchanged_data[i].expected_index,
+                unchanged_data[i].key,
+                unchanged_data[i].val
+        );
+    }
+    for (i = 0; i < TEST_DATA_LEN(overwrite_data); ++i) {
+        assert(!hash_map_get(&out, &map, overwrite_data[i].key));
+        assert(out == overwrite_data[i].val);
+        ASSERT_MAP_ARR_ENTRY_EQ(
+                map,
+                overwrite_data[i].expected_index,
+                overwrite_data[i].key,
+                overwrite_data[i].val
+        );
+    }
+    assert(map.count == 5);
+    assert(map.size == 16);
     assert(count_occupied(&map) == map.count);
 
     hash_map_destroy(&map);
@@ -102,7 +163,7 @@ void c_hash_map_delete_test() {
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        hash_map_insert(&map, test_data[i].key, test_data[i].val);
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
@@ -131,7 +192,7 @@ void c_hash_map_delete_resize_test() {
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        hash_map_insert(&map, test_data[i].key, test_data[i].val);
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
@@ -183,7 +244,7 @@ void c_hash_map_max_size_test() {
 int main() {
     c_hash_map_insert_test();
     c_hash_map_insert_resize_test();
-    /* c_hash_map_insert_overwrite_test(); */
+    c_hash_map_insert_overwrite_test();
     c_hash_map_delete_test();
     c_hash_map_delete_resize_test();
     /* c_hash_map_delete_missing_test(); */
