@@ -26,6 +26,7 @@ typedef struct c_hash_map {
 void hash_map_create(CHashMap *map, uint32 init_size);
 void hash_map_destroy(CHashMap *map);
 int hash_map_insert(PT_ENABLED CHashMap *map, char key, char val);
+int hash_map_delete(PT_ENABLED CHashMap *map, char key);
 int hash_map_get(PT_ENABLED char *out, CHashMap *map, char key);
 void hash_map_print(CHashMap *map);
 
