@@ -15,11 +15,11 @@
      ((uint64)((p)[3]) << 32) |((uint64)((p)[2]) << 40) |                      \
      ((uint64)((p)[1]) << 48) |((uint64)((p)[0]) << 56))
 
-#define OCC_SIZE(s) 1 + ((s) - 1)/8
-#define IS_OCCUPIED(m, b) (m).occ_arr[(b)/8] & 0x80 >> (b)%8
-#define SET_OCCUPIED(m, b) (m).occ_arr[(b)/8] |= (0x80 >> (b)%8)
-#define SET_UNOCCUPIED(m, b) (m).occ_arr[(b)/8] &= ~(0x80 >> (b)%8)
-#define OFFSET_BUCKET(b, o) ((b) + (o))%map->size
+#define OCC_SIZE(s) (1 + ((s) - 1)/8)
+#define IS_OCCUPIED(m, b) ((m).occ_arr[(b)/8] & 0x80 >> (b)%8)
+#define SET_OCCUPIED(m, b) ((m).occ_arr[(b)/8] |= (0x80 >> (b)%8))
+#define SET_UNOCCUPIED(m, b) ((m).occ_arr[(b)/8] &= ~(0x80 >> (b)%8))
+#define OFFSET_BUCKET(b, o) (((b) + (o))%map->size)
 
 void hash_map_create(CHashMap *map, uint32 init_size) {
     /* TODO: Assert against uint32 max. */

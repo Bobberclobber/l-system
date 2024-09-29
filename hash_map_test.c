@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "hash_map.h"
 
-#define TEST_DATA_LEN(t) sizeof((t))/sizeof(CHashMapTestData)
+#define TEST_DATA_LEN(t) (sizeof((t))/sizeof(CHashMapTestData))
 #define ASSERT_MAP_ARR_ENTRY_EQ(m, i, k, v)                                    \
     assert((m).entry_arr[(i)].key == (k));                                     \
     assert((m).entry_arr[(i)].val == (v));                                     \
