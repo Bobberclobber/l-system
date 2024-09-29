@@ -207,6 +207,45 @@ void c_hash_map_delete_resize_test() {
     hash_map_destroy(&map);
 }
 
+void c_hash_map_delete_missing_test() {
+    CHashMapTestData test_data[] = {
+        { .key = 'a', .val = 'x', .expected_index = 11 },
+        { .key = 'b', .val = 'y', .expected_index = 12 },
+        { .key = 'c', .val = 'z', .expected_index = 0 },
+        { .key = 'd', .val = 'v', .expected_index = 5 },
+        { .key = 'e', .val = 'w', .expected_index = 14 },
+    };
+
+    CHashMap map;
+    hash_map_create(&map, 16);
+
+    int i;
+    for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
+        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+    }
+
+    assert(hash_map_delete(&map, '1'));
+    assert(hash_map_delete(&map, '2'));
+    assert(hash_map_delete(&map, '3'));
+
+    char out;
+    for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
+        assert(!hash_map_get(&out, &map, test_data[i].key));
+        assert(out == test_data[i].val);
+        ASSERT_MAP_ARR_ENTRY_EQ(
+                map,
+                test_data[i].expected_index,
+                test_data[i].key,
+                test_data[i].val
+        );
+    }
+    assert(map.count == 5);
+    assert(map.size == 16);
+    assert(count_occupied(&map) == map.count);
+
+    hash_map_destroy(&map);
+}
+
 void c_hash_map_max_size_test() {
     CHashMap map;
     hash_map_create(&map, 16);
@@ -247,7 +286,7 @@ int main() {
     c_hash_map_insert_overwrite_test();
     c_hash_map_delete_test();
     c_hash_map_delete_resize_test();
-    /* c_hash_map_delete_missing_test(); */
+    c_hash_map_delete_missing_test();
     c_hash_map_max_size_test();
     printf("All tests passed!\n");
     return 0;
