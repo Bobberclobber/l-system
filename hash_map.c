@@ -138,4 +138,7 @@ void hash_map_print(CHashMap *map) {
         }
 	}
     printf("}\n");
+    for (i = 0; i < OCC_SIZE(map->size); ++i) {
+        printf("%08b\n", map->occ_arr[i]);
+    }
 }
