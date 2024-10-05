@@ -2,7 +2,7 @@
 #define HASHMAP_H
 
 #include "int_types.h"
-#include "test.h"
+#include "perf_test.h"
 
 typedef struct c_hash_map_entry {
     char key;

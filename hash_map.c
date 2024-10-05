@@ -104,6 +104,7 @@ int hash_map_delete(PT_ENABLED CHashMap *map, char key) {
         }
         offset += 1;
     }
+    PT_COUNTER_INC(1, 1);
     return 1;
 }
 
@@ -121,6 +122,7 @@ int hash_map_get(PT_ENABLED char *out, CHashMap *map, char key) {
         }
         offset += 1;
     }
+    PT_COUNTER_INC(1, 1);
     return 1;
 }
 
