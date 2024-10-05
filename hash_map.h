@@ -4,7 +4,7 @@
 #include "int_types.h"
 #include "perf_test.h"
 
-#define DEFINE_HASH_MAP_TYPE(n, a, kt, vt)                                     \
+#define DECLARE_HASH_MAP_TYPE(n, a, kt, vt)                                     \
     typedef struct n ## _entry {                                               \
         kt key;                                                                \
         vt val;                                                                \
@@ -32,7 +32,7 @@
     int n ## _get(PT_ENABLED vt *out, a *map, kt key);                         \
     void n ## _print(a *map);
 
-
-DEFINE_HASH_MAP_TYPE(hash_map_cc, HashMapCC, char, char);
+DECLARE_HASH_MAP_TYPE(hash_map_cc, HashMapCC, char, char);
+DECLARE_HASH_MAP_TYPE(hash_map_ci, HashMapCI, char, int);
 
 #endif
