@@ -1,7 +1,7 @@
 # Specific executables
+hash_map_perf_test
 hash_map_test
 lsystem
-perf_test
 
 # Prerequisites
 *.d

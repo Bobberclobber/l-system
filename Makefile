@@ -16,8 +16,8 @@ test: $(T_SRC)
 	./hash_map_test
 
 perf_test: $(PT_SRC)
-	$(CC) $(CFLAGS) -DPERFTEST -o perf_test $(PT_SRC)
-	./perf_test
+	$(CC) $(CFLAGS) -DPERFTEST -o hash_map_perf_test $(PT_SRC)
+	./hash_map_perf_test
 
 clean:
 	rm -f lsystem hash_map_perf_test hash_map_test
