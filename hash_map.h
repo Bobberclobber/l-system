@@ -4,18 +4,18 @@
 #include "int_types.h"
 #include "perf_test.h"
 
-typedef struct c_hash_map_entry {
+typedef struct hash_map_cc_entry {
     char key;
     char val;
-} CHashMapEntry;
+} HashMapCCEntry;
 
-typedef struct c_hash_map {
+typedef struct hash_map_cc {
 	uint32 count;
 	uint32 size;
-	CHashMapEntry *entry_arr;
+	HashMapCCEntry *entry_arr;
 	uint8 *occ_arr;
 	char k[16];
-} CHashMap;
+} HashMapCC;
 
 /*
  * TODO: Standardize and formalize doc strings.
@@ -23,11 +23,11 @@ typedef struct c_hash_map {
  * init_size: The initial maximum number of elements that the map can hold.
  *            This should ideally be a power of 2.
  */
-void hash_map_create(CHashMap *map, uint32 init_size);
-void hash_map_destroy(CHashMap *map);
-int hash_map_insert(PT_ENABLED CHashMap *map, char key, char val);
-int hash_map_delete(PT_ENABLED CHashMap *map, char key);
-int hash_map_get(PT_ENABLED char *out, CHashMap *map, char key);
-void hash_map_print(CHashMap *map);
+void hash_map_create(HashMapCC *map, uint32 init_size);
+void hash_map_destroy(HashMapCC *map);
+int hash_map_insert(PT_ENABLED HashMapCC *map, char key, char val);
+int hash_map_delete(PT_ENABLED HashMapCC *map, char key);
+int hash_map_get(PT_ENABLED char *out, HashMapCC *map, char key);
+void hash_map_print(HashMapCC *map);
 
 #endif

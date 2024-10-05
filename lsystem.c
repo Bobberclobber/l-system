@@ -4,7 +4,7 @@
 int main() {
 	printf("Running L-System..\n");
 
-	CHashMap map;
+	HashMapCC map;
 	hash_map_create(&map, 8);
 
 	hash_map_insert(&map, 'a', 'i');

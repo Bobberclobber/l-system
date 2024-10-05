@@ -4,7 +4,7 @@
 #include "perf_test.h"
 
 void hash_map_create_destroy_ptest() {
-    CHashMap map;
+    HashMapCC map;
     int i;
     START_TIMERS;
     for (i = 0; i < 1000; ++i) {
@@ -21,7 +21,7 @@ void hash_map_insert_ptest() {
     PerfTestData ptd;
     ptd_init(&ptd);
 
-    CHashMap map;
+    HashMapCC map;
     hash_map_create(&map, 16);
 
     int i;
@@ -46,7 +46,7 @@ void hash_map_delete_ptest() {
     PerfTestData ptd;
     ptd_init(&ptd);
 
-    CHashMap map;
+    HashMapCC map;
     hash_map_create(&map, 16);
 
     int i;
@@ -74,7 +74,7 @@ void hash_map_get_ptest() {
     PerfTestData ptd;
     ptd_init(&ptd);
 
-    CHashMap map;
+    HashMapCC map;
     hash_map_create(&map, 16);
 
     int i;
