@@ -21,7 +21,7 @@
 #define SET_UNOCCUPIED(m, b) ((m).occ_arr[(b)/8] &= ~(0x80 >> (b)%8))
 #define OFFSET_BUCKET(b, o) (((b) + (o))%map->size)
 
-void hash_map_create(HashMapCC *map, uint32 init_size) {
+void hash_map_cc_create(HashMapCC *map, uint32 init_size) {
     /* TODO: Assert against uint32 max. */
     assert(init_size != 0);
     map->count = 0;
@@ -34,12 +34,12 @@ void hash_map_create(HashMapCC *map, uint32 init_size) {
     }
 }
 
-void hash_map_destroy(HashMapCC *map) {
+void hash_map_cc_destroy(HashMapCC *map) {
     free(map->entry_arr);
     free(map->occ_arr);
 }
 
-int hash_map_insert_internal(PT_ENABLED HashMapCC *map, char key, char val) {
+int hash_map_cc_insert_internal(PT_ENABLED HashMapCC *map, char key, char val) {
     PT_COUNTER_INC(1, 1);
     uint8 hash_out[HASH_LEN];
     siphash(&key, CHAR_BYTE_LEN, map->k, hash_out, HASH_LEN);
@@ -64,16 +64,16 @@ int hash_map_insert_internal(PT_ENABLED HashMapCC *map, char key, char val) {
     return 0;
 }
 
-int hash_map_insert(PT_ENABLED HashMapCC *map, char key, char val) {
+int hash_map_cc_insert(PT_ENABLED HashMapCC *map, char key, char val) {
     /* Resize if the map is ~75% full. */
     if (map->count > (map->size - (map->size >> 2))) {
         PT_COUNTER_INC(0, 1);
         HashMapCC old_map = *map;
-        hash_map_create(map, map->size << 1);
+        hash_map_cc_create(map, map->size << 1);
         int i;
         for (i = 0; i < old_map.size; ++i) {
             if (IS_OCCUPIED(old_map, i)) {
-                int res = hash_map_insert_internal(
+                int res = hash_map_cc_insert_internal(
                         PT_INPUT
                         map,
                         old_map.entry_arr[i].key,
@@ -84,12 +84,12 @@ int hash_map_insert(PT_ENABLED HashMapCC *map, char key, char val) {
                 }
             }
         }
-        hash_map_destroy(&old_map);
+        hash_map_cc_destroy(&old_map);
     }
-    return hash_map_insert_internal(PT_INPUT map, key, val);
+    return hash_map_cc_insert_internal(PT_INPUT map, key, val);
 }
 
-int hash_map_delete(PT_ENABLED HashMapCC *map, char key) {
+int hash_map_cc_delete(PT_ENABLED HashMapCC *map, char key) {
     uint8 hash_out[HASH_LEN];
     siphash(&key, CHAR_BYTE_LEN, map->k, hash_out, HASH_LEN);
     uint32 bucket = U8TO64_BE(hash_out) % map->size;
@@ -108,7 +108,7 @@ int hash_map_delete(PT_ENABLED HashMapCC *map, char key) {
     return 1;
 }
 
-int hash_map_get(PT_ENABLED char *out, HashMapCC *map, char key) {
+int hash_map_cc_get(PT_ENABLED char *out, HashMapCC *map, char key) {
     uint8 hash_out[HASH_LEN];
     siphash(&key, CHAR_BYTE_LEN, map->k, hash_out, HASH_LEN);
     uint32 bucket = U8TO64_BE(hash_out) % map->size;
@@ -126,7 +126,7 @@ int hash_map_get(PT_ENABLED char *out, HashMapCC *map, char key) {
     return 1;
 }
 
-void hash_map_print(HashMapCC *map) {
+void hash_map_cc_print(HashMapCC *map) {
     int i;
     printf("{\n");
 	for (i = 0; i < map->size; ++i) {

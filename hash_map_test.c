@@ -34,16 +34,16 @@ void hash_map_cc_insert_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 16);
+    hash_map_cc_create(&map, 16);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_get(&out, &map, test_data[i].key));
+        assert(!hash_map_cc_get(&out, &map, test_data[i].key));
         assert(out == test_data[i].val);
         ASSERT_MAP_ARR_ENTRY_EQ(
                 map,
@@ -56,7 +56,7 @@ void hash_map_cc_insert_test() {
     assert(map.size == 16);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_insert_resize_test() {
@@ -69,23 +69,23 @@ void hash_map_cc_insert_resize_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 4);
+    hash_map_cc_create(&map, 4);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_get(&out, &map, test_data[i].key));
+        assert(!hash_map_cc_get(&out, &map, test_data[i].key));
         assert(out == test_data[i].val);
     }
     assert(map.count == 5);
     assert(map.size == 8);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_insert_overwrite_test() {
@@ -107,14 +107,14 @@ void hash_map_cc_insert_overwrite_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 16);
+    hash_map_cc_create(&map, 16);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
     for (i = 0; i < TEST_DATA_LEN(overwrite_data); ++i) {
-        assert(!hash_map_insert(
+        assert(!hash_map_cc_insert(
                     &map,
                     overwrite_data[i].key,
                     overwrite_data[i].val
@@ -123,7 +123,7 @@ void hash_map_cc_insert_overwrite_test() {
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(unchanged_data); ++i) {
-        assert(!hash_map_get(&out, &map, unchanged_data[i].key));
+        assert(!hash_map_cc_get(&out, &map, unchanged_data[i].key));
         assert(out == unchanged_data[i].val);
         ASSERT_MAP_ARR_ENTRY_EQ(
                 map,
@@ -133,7 +133,7 @@ void hash_map_cc_insert_overwrite_test() {
         );
     }
     for (i = 0; i < TEST_DATA_LEN(overwrite_data); ++i) {
-        assert(!hash_map_get(&out, &map, overwrite_data[i].key));
+        assert(!hash_map_cc_get(&out, &map, overwrite_data[i].key));
         assert(out == overwrite_data[i].val);
         ASSERT_MAP_ARR_ENTRY_EQ(
                 map,
@@ -146,7 +146,7 @@ void hash_map_cc_insert_overwrite_test() {
     assert(map.size == 16);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_delete_test() {
@@ -159,23 +159,23 @@ void hash_map_cc_delete_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 16);
+    hash_map_cc_create(&map, 16);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_delete(&map, test_data[i].key));
-        assert(hash_map_get(&out, &map, test_data[i].key));
+        assert(!hash_map_cc_delete(&map, test_data[i].key));
+        assert(hash_map_cc_get(&out, &map, test_data[i].key));
     }
     assert(map.count == 0);
     assert(map.size == 16);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_delete_resize_test() {
@@ -188,23 +188,23 @@ void hash_map_cc_delete_resize_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 4);
+    hash_map_cc_create(&map, 4);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_delete(&map, test_data[i].key));
-        assert(hash_map_get(&out, &map, test_data[i].key));
+        assert(!hash_map_cc_delete(&map, test_data[i].key));
+        assert(hash_map_cc_get(&out, &map, test_data[i].key));
     }
     assert(map.count == 0);
     assert(map.size == 8);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_delete_missing_test() {
@@ -217,20 +217,20 @@ void hash_map_cc_delete_missing_test() {
     };
 
     HashMapCC map;
-    hash_map_create(&map, 16);
+    hash_map_cc_create(&map, 16);
 
     int i;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_insert(&map, test_data[i].key, test_data[i].val));
+        assert(!hash_map_cc_insert(&map, test_data[i].key, test_data[i].val));
     }
 
-    assert(hash_map_delete(&map, '1'));
-    assert(hash_map_delete(&map, '2'));
-    assert(hash_map_delete(&map, '3'));
+    assert(hash_map_cc_delete(&map, '1'));
+    assert(hash_map_cc_delete(&map, '2'));
+    assert(hash_map_cc_delete(&map, '3'));
 
     char out;
     for (i = 0; i < TEST_DATA_LEN(test_data); ++i) {
-        assert(!hash_map_get(&out, &map, test_data[i].key));
+        assert(!hash_map_cc_get(&out, &map, test_data[i].key));
         assert(out == test_data[i].val);
         ASSERT_MAP_ARR_ENTRY_EQ(
                 map,
@@ -243,16 +243,16 @@ void hash_map_cc_delete_missing_test() {
     assert(map.size == 16);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 void hash_map_cc_max_size_test() {
     HashMapCC map;
-    hash_map_create(&map, 16);
+    hash_map_cc_create(&map, 16);
 
     int i;
     for (i = 0; i < 256; ++i) {
-        assert(!hash_map_insert(&map, i, (i + 17)%256));
+        assert(!hash_map_cc_insert(&map, i, (i + 17)%256));
     }
 
     assert(map.count == 256);
@@ -260,7 +260,7 @@ void hash_map_cc_max_size_test() {
 
     char out;
     for (i = 0; i < 256; ++i) {
-        assert(!hash_map_get(&out, &map, i));
+        assert(!hash_map_cc_get(&out, &map, i));
         assert(out == (char)((i + 17)%256));
     }
 
@@ -269,15 +269,15 @@ void hash_map_cc_max_size_test() {
     assert(count_occupied(&map) == map.count);
 
     for (i = 0; i < 256; ++i) {
-        assert(!hash_map_delete(&map, i));
-        assert(hash_map_get(&out, &map, i));
+        assert(!hash_map_cc_delete(&map, i));
+        assert(hash_map_cc_get(&out, &map, i));
     }
 
     assert(map.count == 0);
     assert(map.size == 512);
     assert(count_occupied(&map) == map.count);
 
-    hash_map_destroy(&map);
+    hash_map_cc_destroy(&map);
 }
 
 int main() {

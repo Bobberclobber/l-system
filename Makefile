@@ -1,5 +1,5 @@
 CC = tcc
-CFLAGS = -Wall -std=89
+CFLAGS = -Wall -std=c89
 SRC = lsystem.c siphash.c hash_map.c
 T_SRC = hash_map_test.c siphash.c hash_map.c
 PT_SRC = hash_map_perf_test.c perf_test.c siphash.c hash_map.c

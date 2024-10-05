@@ -4,30 +4,35 @@
 #include "int_types.h"
 #include "perf_test.h"
 
-typedef struct hash_map_cc_entry {
-    char key;
-    char val;
-} HashMapCCEntry;
+#define DEFINE_HASH_MAP_TYPE(n, a, kt, vt)                                     \
+    typedef struct n ## _entry {                                               \
+        kt key;                                                                \
+        vt val;                                                                \
+    } a ## Entry;                                                              \
+                                                                               \
+    typedef struct n {                                                         \
+    	uint32 count;                                                          \
+    	uint32 size;                                                           \
+    	a ## Entry *entry_arr;                                                 \
+    	uint8 *occ_arr;                                                        \
+    	char k[16];                                                            \
+    } a;                                                                       \
+                                                                               \
+    /*                                                                         \
+     * Allocate memory for values and initialize meta data fields.             \
+     *                                                                         \
+     *      *map: Pointer to new hash map.                                     \
+     * init_size: The initial number of elements that the map can hold. This   \
+     *            should ideally be a power of 2.                              \
+     */                                                                        \
+    void n ## _create(a *map, uint32 init_size);                               \
+    void n ## _destroy(a *map);                                                \
+    int n ## _insert(PT_ENABLED a *map, kt key, vt val);                       \
+    int n ## _delete(PT_ENABLED a *map, kt key);                               \
+    int n ## _get(PT_ENABLED vt *out, a *map, kt key);                         \
+    void n ## _print(a *map);
 
-typedef struct hash_map_cc {
-	uint32 count;
-	uint32 size;
-	HashMapCCEntry *entry_arr;
-	uint8 *occ_arr;
-	char k[16];
-} HashMapCC;
 
-/*
- * TODO: Standardize and formalize doc strings.
- * *map: pointer to new CHashMap.
- * init_size: The initial maximum number of elements that the map can hold.
- *            This should ideally be a power of 2.
- */
-void hash_map_create(HashMapCC *map, uint32 init_size);
-void hash_map_destroy(HashMapCC *map);
-int hash_map_insert(PT_ENABLED HashMapCC *map, char key, char val);
-int hash_map_delete(PT_ENABLED HashMapCC *map, char key);
-int hash_map_get(PT_ENABLED char *out, HashMapCC *map, char key);
-void hash_map_print(HashMapCC *map);
+DEFINE_HASH_MAP_TYPE(hash_map_cc, HashMapCC, char, char);
 
 #endif
