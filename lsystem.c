@@ -21,15 +21,7 @@ int main() {
 	hash_map_cc_insert(&map, 'y', 't');
 	hash_map_cc_insert(&map, 'z', 'u');
 
-    printf("\n");
-
-    int i;
-	for (i = 0; i < map.size; ++i) {
-		printf("%d: %c -> %c\n", i, map.entry_arr[i].key, map.entry_arr[i].val);
-	}
-	for (i = 0; i < 1 + (map.size - 1)/8; ++i) {
-		printf("%08b\n", map.occ_arr[i]);
-	}
+    hash_map_cc_print(&map);
 
     hash_map_cc_destroy(&map);
 

@@ -130,14 +130,14 @@
         return 1;                                                              \
     }
 
-#define DEFINE_HASH_MAP_PRINT(n, a)                                            \
+#define DEFINE_HASH_MAP_PRINT(n, a, kf, vf)                                    \
     void n ## _print(a *map) {                                                 \
         int i;                                                                 \
         printf("{\n");                                                         \
     	for (i = 0; i < map->size; ++i) {                                      \
             if (IS_OCCUPIED(*map, i)) {                                        \
                 printf(                                                        \
-                        "  [%d] %c: %c\n",                                     \
+                        "  [%d] " #kf ": " #vf "\n",                           \
                         i,                                                     \
                         map->entry_arr[i].key,                                 \
                         map->entry_arr[i].val                                  \
@@ -153,7 +153,19 @@
     }
 
 DEFINE_HASH_MAP_CREATE(hash_map_cc, HashMapCC);
+DEFINE_HASH_MAP_CREATE(hash_map_ci, HashMapCI);
+
 DEFINE_HASH_MAP_DESTROY(hash_map_cc, HashMapCC);
+DEFINE_HASH_MAP_DESTROY(hash_map_ci, HashMapCI);
+
 DEFINE_HASH_MAP_INSERT(hash_map_cc, HashMapCC, char, char);
+DEFINE_HASH_MAP_INSERT(hash_map_ci, HashMapCI, char, int);
+
 DEFINE_HASH_MAP_DELETE(hash_map_cc, HashMapCC, char);
+DEFINE_HASH_MAP_DELETE(hash_map_ci, HashMapCI, char);
+
 DEFINE_HASH_MAP_GET(hash_map_cc, HashMapCC, char, char);
+DEFINE_HASH_MAP_GET(hash_map_ci, HashMapCI, char, int);
+
+DEFINE_HASH_MAP_PRINT(hash_map_cc, HashMapCC, %c, %c);
+DEFINE_HASH_MAP_PRINT(hash_map_ci, HashMapCI, %c, %d);
