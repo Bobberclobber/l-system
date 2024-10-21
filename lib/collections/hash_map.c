@@ -4,7 +4,7 @@
 #include "hash_map.h"
 #include "int_types.h"
 #include "siphash.h"
-#include "test.h"
+#include "perf_test.h"
 
 #define HASH_LEN 8
 
